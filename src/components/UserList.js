@@ -3,24 +3,26 @@
  */
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import {userList} from '../wallet';
+import {getUserList} from '../wallet';
 import User from './UserComponent';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class UserList extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             page: 1,
-            data: []
+            data: [],
+            lastPage: 10
         };
         this.previousPage = this.previousPage.bind(this);
         this.nextPage = this.nextPage.bind(this);
+        this.newList = this.newList.bind(this);
     }
     componentDidMount(){
-        let test = userList((this.state.page-1)*10, 10);
-        console.log(test);
+        let test = getUserList((this.state.page-1)*10, 10);
         test.then( response=>{
-            this.setState({data:response.data.data});
+            this.setState({data:response.data.data, lastPage: Math.floor(response.data.recordsTotal/10+1), recordsTotal: response.data.recordsTotal });
         })
             .catch( error=>{
                 console.log(error);
@@ -29,33 +31,55 @@ class UserList extends React.Component {
 
     previousPage(){
         if (this.state.page>1){
-            this.setState({page:this.state.page-1})//TODO переделать на функцию. Добавить проверку на первую страницу
+            this.setState(prevProps=>{
+                this.newList(prevProps.page-1);
+                return ({page:prevProps.page-1})
+            });
         }
     }
     nextPage(){
-        this.setState({page:this.state.page+1})//TODO переделать на функцию. Добавить проверку на последнюю страницу
+        if (this.state.page<this.state.lastPage){
+            this.setState(prevProps=>{
+                this.newList(prevProps.page+1);
+                return ({page:prevProps.page+1})
+            });
+        }
+    }
+    newList(page) {
+        let test = getUserList((page-1)*10, 10);
+        test.then( response=>{
+            this.setState({data:response.data.data, lastPage: Math.floor(response.data.recordsTotal/10+1), recordsTotal: response.data.recordsTotal });
+        })
+            .catch( error=>{
+                console.log(error);
+            });
     }
 
     render(){
-        let userArray = this.state.data.map(user=><User key={`user_${user.user_id}`} id={user.id} name={user.user_name} custom={user.user_custom} email={user.email} />);
+        let userArray = this.state.data.map(user=><User key={`user_${user.user_id}`}
+                                                        id={user.user_id} name={user.user_name}
+                                                        custom={user.user_custom}
+                                                        email={user.email} data={user}
+                                                        getUserOperations={this.props.getUserOperations} />);
         return (
-            <Paper style={{flexGrow: 1, marginRight: 15, padding: '15px 10px', display: 'flex', flexDirection: 'column'}}>
-                Список пользователей:   "+"
+            <Paper style={{flex: 'none', width: 300, marginRight: 15, padding: '15px 10px', display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <span>Список пользователей:</span>
+                    <span style={{fontWeight:600}}>+</span>
+                </div>
                 {userArray}
                 <div style={{marginTop:'auto', display: 'flex', justifyContent:'space-between'}}>
-                    <span
-                        style={{padding: 5}}
+                    <RaisedButton
                         onClick = {this.previousPage}
-                    >
-                        назад
-                    </span>
-                    {`${(this.state.page-1)*10+1}-${this.state.page*10}`}
-                    <span
-                        style={{padding: 5}}
+                        label = 'Назад'
+                        primary={true}
+                    />
+                    {`${(this.state.page-1)*10+1}-${this.state.page === this.state.lastPage ? this.state.recordsTotal : this.state.page*10}`}
+                    <RaisedButton
                         onClick = {this.nextPage}
-                    >
-                        вперед
-                    </span>
+                        label = 'вперед'
+                        primary={true}
+                    />
                 </div>
             </Paper>
         )
