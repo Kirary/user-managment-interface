@@ -3,6 +3,8 @@
  */
 import React from 'react';
 import Paper from 'material-ui/Paper';
+import {connect} from 'react-redux';
+
 import {getUserList} from '../wallet';
 import User from './UserComponent';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -85,4 +87,9 @@ class UserList extends React.Component {
         )
     }
 }
-export default UserList
+export default connect(
+    state => ({
+        userList: state.users.list
+    }),
+    dispatch =>({})
+)(UserList);
