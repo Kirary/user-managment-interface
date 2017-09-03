@@ -11,7 +11,11 @@ export default class UserComponent extends React.Component {
     }
 
     cardClick() {
-        this.props.getUserOperations(this.props.id, this.props.name);
+        this.props.getOperations(
+            {id: this.props.id, name: this.props.name, data: this.props.data},
+            this.props.data.register_date,
+            new Date().toISOString()
+        );
     }
 
     render(){

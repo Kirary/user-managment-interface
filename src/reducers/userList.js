@@ -10,12 +10,9 @@ const initialState = {
     page: 1
 };
 
-export default function users(state = initialState, action) {
+export default function userList(state = initialState, action) {
     switch (action.type){
-        case 'GET_USER_LIST':
-            return state;
         case 'USERS_GET_LIST_LOADING':
-            debugger;
             return {
                 ...state,
                 loading: true,

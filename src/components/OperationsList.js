@@ -3,9 +3,9 @@
  */
 
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import Paper from 'material-ui/Paper';
 
-import {getUserOperations} from '../wallet';
 import OperationCard from '../components/OperationCard';
 
 
@@ -13,29 +13,15 @@ import OperationCard from '../components/OperationCard';
 class OperationsList extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            userOperationsList: [],
-            user_name: null
-        };
-        this.getUserOperations = this.getUserOperations.bind(this);
-    }
-
-    getUserOperations(user_id, user_name){
-        getUserOperations(user_id).then( response=>{
-            this.setState({userOperationsList:response.data, user_name:user_name});
-        })
-            .catch( error=>{
-                console.log(error);
-            });
     }
 
     render() {
-        let userOperationsArray = this.state.userOperationsList.map(operation=>{
-            return <OperationCard operation={operation}/>
+        let userOperationsArray = this.props.list.map(operation=>{
+            return <OperationCard operation={operation} key={`operation_${operation.operation_id}`}/>
         });
 
         return (
-            <Paper style={{padding: '15px 10px', flexGrow: 2}}>
+            <Paper style={{padding: '15px 10px', flexGrow: 2, overflow: 'auto'}}>
                 <p>Окно просмотра операций пользователя.</p>
 
                 <ol>
@@ -47,7 +33,10 @@ class OperationsList extends Component {
                     <li>Изменение баланса пользователя</li>
                 </ol>
 
-                Операции пользователя <span style={{fontWeight: 600}}>{this.state.user_name}</span>:
+                Два поля ввода даты:
+                Период поиска операций
+                <br/>
+                Операции пользователя <span style={{fontWeight: 600}}>{this.props.name}</span>:
                 {userOperationsArray}
 
             </Paper>
@@ -55,4 +44,11 @@ class OperationsList extends Component {
     }
 }
 
-export default OperationsList;
+export default connect(
+    state => ({
+        list: state.operationList.list,
+        name: state.operationList.name,
+        data: state.operationList.data
+    }),
+    dispatch =>({})
+)(OperationsList);

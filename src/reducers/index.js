@@ -3,7 +3,9 @@
  */
 import { combineReducers } from 'redux';
 import userList from './userList';
+import operationList from './operationList';
 
 export default combineReducers({
-    userList
+    userList,
+    operationList
 })

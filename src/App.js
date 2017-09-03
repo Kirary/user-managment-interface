@@ -36,11 +36,7 @@ class App extends Component {
                 <div style={{display:'flex', height: '85vh'}}>
                   <UserList getUserOperations={this.getUserOperations}/>
                   <OperationsList getUserOperations={this.getUserOperations}/>
-
                 </div>
-
-
-
               </div>
         );
     }

@@ -6,9 +6,8 @@ import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 
 export default (data) => {
-    debugger;
     return (
-        <Paper style={{marginBottom:10, padding:'10px 15px', fontSize: 12}} key={`operation_${data.operation.operation_id}`}>
+        <Paper style={{marginBottom:10, padding:'10px 15px', fontSize: 12}}>
             <div>STATUS: {data.operation.status}</div>
             <div style={{display:'flex'}}>
                 <div>operation_id: {data.operation.operation_id}</div>

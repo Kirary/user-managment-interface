@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import {getUserList} from '../actions/usersActions';
+import {getUserList, getUserOperations} from '../actions/usersActions';
 import User from './UserComponent';
 
 class UserList extends React.Component {
@@ -33,7 +33,7 @@ class UserList extends React.Component {
                                                         id={user.user_id} name={user.user_name}
                                                         custom={user.user_custom}
                                                         email={user.email} data={user}
-                                                        getUserOperations={this.props.getUserOperations} />);
+                                                        getOperations={this.props.onGetOperationList} />);
         let page = this.props.loading ? <CircularProgress style={{margin: '150px auto'}}/>: userArray;
         return (
             <Paper style={{flex: 'none', width: 300, marginRight: 15, padding: '15px 10px', display: 'flex', flexDirection: 'column'}}>
@@ -74,6 +74,9 @@ export default connect(
     dispatch =>({
         onGetList: (offset, limit) => {
             dispatch(getUserList(offset, limit));
+        },
+        onGetOperationList: (user, tFrom, tTo) => {
+            dispatch(getUserOperations(user, tFrom, tTo));
         }
     })
 )(UserList);
