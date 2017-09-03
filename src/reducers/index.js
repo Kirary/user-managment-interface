@@ -2,8 +2,8 @@
  * Created by Kirary on 02.09.2017.
  */
 import { combineReducers } from 'redux';
-import users from './users';
+import userList from './userList';
 
 export default combineReducers({
-    users
+    userList
 })

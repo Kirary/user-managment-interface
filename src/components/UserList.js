@@ -4,83 +4,57 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import {connect} from 'react-redux';
-
-import {getUserList} from '../wallet';
-import User from './UserComponent';
 import RaisedButton from 'material-ui/RaisedButton';
+import CircularProgress from 'material-ui/CircularProgress';
+
+import {getUserList} from '../actions/usersActions';
+import User from './UserComponent';
 
 class UserList extends React.Component {
     constructor(props){
         super(props);
-        this.state = {
-            page: 1,
-            data: [],
-            lastPage: 10
-        };
         this.previousPage = this.previousPage.bind(this);
         this.nextPage = this.nextPage.bind(this);
-        this.newList = this.newList.bind(this);
     }
+
     componentDidMount(){
-        let test = getUserList((this.state.page-1)*10, 10);
-        test.then( response=>{
-            this.setState({data:response.data.data, lastPage: Math.floor(response.data.recordsTotal/10+1), recordsTotal: response.data.recordsTotal });
-        })
-            .catch( error=>{
-                console.log(error);
-            });
+        this.props.onGetList(this.props.page, 10);
     }
 
     previousPage(){
-        if (this.state.page>1){
-            this.setState(prevProps=>{
-                this.newList(prevProps.page-1);
-                return ({page:prevProps.page-1})
-            });
-        }
+        this.props.onGetList(this.props.page-1, 10);
     }
     nextPage(){
-        if (this.state.page<this.state.lastPage){
-            this.setState(prevProps=>{
-                this.newList(prevProps.page+1);
-                return ({page:prevProps.page+1})
-            });
-        }
-    }
-    newList(page) {
-        let test = getUserList((page-1)*10, 10);
-        test.then( response=>{
-            this.setState({data:response.data.data, lastPage: Math.floor(response.data.recordsTotal/10+1), recordsTotal: response.data.recordsTotal });
-        })
-            .catch( error=>{
-                console.log(error);
-            });
+        this.props.onGetList(this.props.page+1, 10);
     }
 
     render(){
-        let userArray = this.state.data.map(user=><User key={`user_${user.user_id}`}
+        let userArray = this.props.userList.map(user=><User key={`user_${user.user_id}`}
                                                         id={user.user_id} name={user.user_name}
                                                         custom={user.user_custom}
                                                         email={user.email} data={user}
                                                         getUserOperations={this.props.getUserOperations} />);
+        let page = this.props.loading ? <CircularProgress style={{margin: '150px auto'}}/>: userArray;
         return (
             <Paper style={{flex: 'none', width: 300, marginRight: 15, padding: '15px 10px', display: 'flex', flexDirection: 'column'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                     <span>Список пользователей:</span>
                     <span style={{fontWeight:600}}>+</span>
                 </div>
-                {userArray}
+                {page}
                 <div style={{marginTop:'auto', display: 'flex', justifyContent:'space-between'}}>
                     <RaisedButton
                         onClick = {this.previousPage}
                         label = 'Назад'
                         primary={true}
+                        disabled = {this.props.previous}
                     />
-                    {`${(this.state.page-1)*10+1}-${this.state.page === this.state.lastPage ? this.state.recordsTotal : this.state.page*10}`}
+                    {`${(this.props.page-1)*10+1}-${this.props.page === this.props.lastPage ? this.props.recordsTotal : this.props.page*10}`}
                     <RaisedButton
                         onClick = {this.nextPage}
                         label = 'вперед'
                         primary={true}
+                        disabled = {this.props.next}
                     />
                 </div>
             </Paper>
@@ -89,7 +63,17 @@ class UserList extends React.Component {
 }
 export default connect(
     state => ({
-        userList: state.users.list
+        userList: state.userList.list,
+        previous: !state.userList.previous,
+        next: !state.userList.next,
+        page: state.userList.page,
+        lastPage: state.userList.lastPage,
+        loading: state.userList.loading,
+        recordsTotal: state.userList.recordsTotal
     }),
-    dispatch =>({})
+    dispatch =>({
+        onGetList: (offset, limit) => {
+            dispatch(getUserList(offset, limit));
+        }
+    })
 )(UserList);
