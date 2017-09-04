@@ -3,7 +3,7 @@
  */
 
 const initialState = {
-    loading: true,
+    loading: false,
     list: [],
     name: '',
     data: 0
