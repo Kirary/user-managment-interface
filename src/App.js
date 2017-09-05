@@ -11,10 +11,6 @@ import './App.css';
 class App extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            userOperationsList: [],
-            user_name: null
-        };
         this.getUserOperations = this.getUserOperations.bind(this);
     }
 
@@ -30,14 +26,21 @@ class App extends Component {
     render() {
 
         return (
-              <div className="App">
+            <div className="App">
                 <span style={{fontWeight:600, fontSize: 20, textAlign: 'center'}}>User Management Interface</span>
                 <p>Интерфейс для взаимодействия с информацией о пользователях</p>
-                <div style={{display:'flex', height: '85vh'}}>
-                  <UserList getUserOperations={this.getUserOperations}/>
-                  <OperationsList getUserOperations={this.getUserOperations}/>
+                <div style={{fontSize: 12}}>
+                    Функции интерфейса:
+                    <div>Создание пользователя</div>
+                    <div>Редактирование данных пользователя</div>
+                    <div>Изменение баланса пользователя</div>
                 </div>
-              </div>
+
+                <div style={{display:'flex', height: '85vh'}}>
+                    <UserList getUserOperations={this.getUserOperations}/>
+                    <OperationsList getUserOperations={this.getUserOperations}/>
+                </div>
+            </div>
         );
     }
 }
