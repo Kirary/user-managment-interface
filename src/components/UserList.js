@@ -6,9 +6,14 @@ import Paper from 'material-ui/Paper';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import CircularProgress from 'material-ui/CircularProgress';
+import IconButton from 'material-ui/IconButton';
+import AddUser from 'material-ui/svg-icons/social/person-add';
 
 import {getUserList, getUserOperations} from '../actions/usersActions';
 import User from './UserComponent';
+
+const iconStyle={width: 20, height: 20};
+const iconButtonStyle={width: 20, height: 20, padding: 0, marginRight: 5};
 
 class UserList extends React.Component {
     constructor(props){
@@ -36,12 +41,20 @@ class UserList extends React.Component {
                                                         getOperations={this.props.onGetOperationList} />);
         let page = this.props.loading ? <CircularProgress style={{margin: '150px auto'}}/>: userArray;
         return (
-            <Paper style={{flex: 'none', width: 300, marginRight: 15, padding: '15px 10px', display: 'flex', flexDirection: 'column'}}>
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <Paper style={{flex: 'none', width: 300, marginRight: 15, display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', flex: 'none', background: '#8D7BB7', padding: '15px 10px', color: 'white', fontWeight: 600}}>
                     <span>Список пользователей:</span>
-                    <span style={{fontWeight:600}}>+</span>
+                    <IconButton
+                        iconStyle={iconStyle}
+                        style={iconButtonStyle}
+                        onClick={(e)=>{ e.stopPropagation(); alert('add'); }}
+                    >
+                        <AddUser color="lightgrey" hoverColor="white"/>
+                    </IconButton>
                 </div>
-                {page}
+                <div style={{padding: '15px 10px', flexGrow:1}}>
+                    {page}
+                </div>
                 <div style={{marginTop:'auto', display: 'flex', justifyContent:'space-between'}}>
                     <RaisedButton
                         onClick = {this.previousPage}
