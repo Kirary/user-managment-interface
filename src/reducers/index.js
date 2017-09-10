@@ -4,8 +4,10 @@
 import { combineReducers } from 'redux';
 import userList from './userList';
 import operationList from './operationList';
+import balanceDialog from './balanceDialog';
 
 export default combineReducers({
     userList,
-    operationList
+    operationList,
+    balanceDialog,
 })

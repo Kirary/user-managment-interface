@@ -26,14 +26,12 @@ class OperationsList extends Component {
             dataShown = <div>У данного пользователя отсутствует история транзакций</div>
         }
 
-        let userInfoHeader = this.props.data ? <UserInfoHeader {...this.props.data} /> : <div style={{textAlign:'center', fontSize: 14}}>выберите пользователя из списка</div>;
+        let chooseUser = !this.props.data;
 
         return (
             <Paper style={{flexGrow: 2, display: 'flex', flexDirection: 'column'}}>
-                <div style={{padding: '15px 10px', flex: 'none', height: 120, background: '#8D7BB7', color: 'white'}}>
-                    <div style={{textAlign:'center', fontWeight: 600, marginBottom: 10}}>Окно просмотра операций пользователя</div>
-                    {userInfoHeader}
-                </div>
+
+                <UserInfoHeader {...this.props.data} chooseUser={chooseUser}/>
 
                 {this.props.loading ?
                     <CircularProgress style={{margin: '150px auto'}}/> :
