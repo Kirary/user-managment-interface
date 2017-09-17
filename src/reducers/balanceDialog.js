@@ -13,6 +13,7 @@ export default function balaneDialog(state = initialState, action) {
                 opened: true,
             };
         case 'DIALOG_CLOSE':
+        case 'UPDATE_BALANCE':
             return {
                 ...state,
                 opened: false,

@@ -21,6 +21,19 @@ export const getUserList = (page, limit) =>  dispatch => {
 };
 
 export const getUserOperations = (user, datetimeFrom, datetimeTo) => dispatch => {
+    debugger;
+    //Получение информации о пользователе для шапки
+    dispatch({type: 'SELECTED_USER_INFO_LOADING'});
+    axios.get(`https://livedemo.xsolla.com/fe/test-task/baev/users/${user.id}`, {})
+        .then( response=>{
+            debugger;
+            dispatch({type: 'SELECTED_USER_INFO_LOADED', payload: response.data});
+        })
+        .catch( error=>{
+            debugger;
+            // dispatch({type: 'SELECTED_USER_INFO_ERROR', payload: error});
+        });
+    //Получение инфо о операциях пользователя
     let datetime_from = moment(datetimeFrom).format();
     let datetime_to = moment(datetimeTo).format();
     dispatch({type: 'OPERATION_LIST_LOADING', payload: user});
@@ -35,5 +48,20 @@ export const getUserOperations = (user, datetimeFrom, datetimeTo) => dispatch =>
         })
         .catch( error=>{
             dispatch({type: 'OPERATION_LIST_ERROR', payload: error});
+        });
+};
+
+//POST https://api.xsolla.com/merchant/projects/{project_id}/users/{user_id}/recharge
+export const submitBalanceChange = (data, amount, comment) => dispatch => {
+    debugger;
+    axios.post(`https://livedemo.xsolla.com/fe/test-task/baev/users/${data.user_id}/recharge`, {
+        amount: amount,
+        comment: comment
+    })
+        .then( response=>{
+            dispatch({type: 'UPDATE_BALANCE', payload: response.data});
+        })
+        .catch( error=>{
+            // dispatch({type: 'OPERATION_LIST_ERROR', payload: error});
         });
 };

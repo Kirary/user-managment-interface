@@ -10,7 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import AddUser from 'material-ui/svg-icons/social/person-add';
 
 import {getUserList, getUserOperations} from '../actions/usersActions';
-import User from './UserComponent';
+import UserComponent from './UserComponent';
 
 const iconStyle={width: 20, height: 20};
 const iconButtonStyle={width: 20, height: 20, padding: 0, marginRight: 5};
@@ -34,12 +34,14 @@ class UserList extends React.Component {
     }
 
     render(){
-        let userArray = this.props.userList.map(user=><User key={`user_${user.user_id}`}
+        let userArray = this.props.userList.map(user=><UserComponent key={`user_${user.user_id}`}
                                                         id={user.user_id} name={user.user_name}
                                                         custom={user.user_custom}
                                                         email={user.email} data={user}
                                                         getOperations={this.props.onGetOperationList} />);
+
         let page = this.props.loading ? <CircularProgress style={{margin: '150px auto'}}/>: userArray;
+
         return (
             <Paper style={{flex: 'none', width: 300, marginRight: 15, display: 'flex', flexDirection: 'column'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', flex: 'none', background: '#8D7BB7', padding: '15px 10px', color: 'white', fontWeight: 600}}>

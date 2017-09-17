@@ -9,11 +9,21 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import OperationCard from '../components/OperationCard';
 import UserInfoHeader from '../components/UserInfoHeader';
+import {getUserOperations} from '../actions/usersActions';
 
 
 
 
 class OperationsList extends Component {
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.updateList){
+            this.props.onGetOperationList(
+                {id: nextProps.data.user_id, name: nextProps.name, data: nextProps.data},
+                nextProps.data.register_date,
+                new Date().toISOString()
+            );
+        }
+    }
     render() {
         let userOperationsArray = this.props.list.map(operation=>{
             return <OperationCard operation={operation} key={`operation_${operation.operation_id}`}/>
@@ -48,7 +58,11 @@ export default connect(
         list: state.operationList.list,
         name: state.operationList.name,
         data: state.operationList.data,
-        loading: state.operationList.loading
+        loading: state.operationList.loading,
+        updateList: state.operationList.updateList
     }),
-    dispatch =>({})
+    dispatch =>({
+        onGetOperationList: (user, tFrom, tTo) => {
+            dispatch(getUserOperations(user, tFrom, tTo));
+        }})
 )(OperationsList);
